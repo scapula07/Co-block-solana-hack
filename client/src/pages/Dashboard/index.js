@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import staff1 from "../../assets/staff1.png"
 import {AiOutlineMail} from "react-icons/ai"
 import {TiAttachmentOutline} from "react-icons/ti"
@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom'
 import {BsGrid} from "react-icons/bs"
 import {GrHomeOption} from "react-icons/gr"
 import meeetingImg from "../../assets/meeting.png"
-
+import { useActions } from '../../Hooks/coblocks.utils'
 
 
 const meetings=[
@@ -62,6 +62,12 @@ const Meeting=({meet})=>{
 }
 
 export default function Dashboard() {
+    const {initializeUser , initialized,findDevAccounts} = useActions()
+    useEffect(()=>{
+         findDevAccounts()
+    },[]
+    )
+
   return (
     <div className='px-14 text-black'>
           
@@ -98,7 +104,14 @@ export default function Dashboard() {
                 </main>
                 
                 <main className=' flex items-center  w-1/4'>
-
+                {initialized&&
+                     <button className='bg-blue-400 rounded-md py-1 px-4 text-white'
+                       onClick={()=>initializeUser}
+                     >Initialize profile</button>
+                }
+                 {!initialized&&
+                     <span className='text-sm font-semibold'></span>
+                }
                 </main>
 
             </div>

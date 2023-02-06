@@ -13,6 +13,7 @@ import Teams from './pages/Teams';
 import Myteams from './pages/Dashboard/myteams';
 import Tasks from './pages/Dashboard/task';
 import DevPage from './pages/DevPage';
+import VideoCall from './pages/VideoConferencing';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           </Route>
           <Route exact path="/teams" element={<Teams  />}  />
           <Route exact path="/devs" element={<DevPage />}  />
+          <Route exact path="/videocall" element={<VideoCall />}  />
         </Routes>
       
       </Layout>

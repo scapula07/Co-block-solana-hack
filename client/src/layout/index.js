@@ -5,8 +5,8 @@ import "./layout.css"
 
 export default function Layout({children}) {
   return (
-    <div className="layout text-black bg-slate-200 h-screen text-white  overflow-x-hidden ">
-        <div className='flex w-full'>
+    <div className="layout text-black bg-slate-200 h-screen text-white  overflow-x-hidden  px-8">
+        <div className='flex w-full '>
 
           <main className='width-sidenavs'>
            <SideNavs  />

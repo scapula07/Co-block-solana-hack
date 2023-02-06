@@ -1,13 +1,18 @@
-import React ,{useState} from 'react'
+import React ,{useState,useEffect,useMemo} from 'react'
 import {FiSearch} from "react-icons/fi"
-import {MdOutlineZoomOutMap,MdAdd} from "react-icons/md"
-import {RiSettings3Fill,RiAttachment2} from "react-icons/ri"
+import {MdOutlineZoomOutMap,MdAdd,MdOutlineDeleteOutline} from "react-icons/md"
+import {RiSettings3Fill,RiAttachment2,RiDeleteBin5Line} from "react-icons/ri"
 import staff1 from "../../assets/staff1.png"
 import staff2 from "../../assets/staff2.png"
 import {GrAdd} from "react-icons/gr"
 import {AiOutlineStar,AiOutlineLike} from "react-icons/ai"
 import {BsGrid,BsListNested,BsFillCalendarEventFill} from "react-icons/bs"
 import { useActions } from '../../Hooks/coblocks.utils'
+import { useRecoilValue } from 'recoil'
+import { TasksState } from '../../recoil/globalState'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const TopBar=()=>{
 
@@ -154,11 +159,14 @@ const TitleBar=({name,borderColor,num ,textColor})=>{
 
 
 
-const TaskCard=({text,proposer})=>{
+const TaskCard=({text,proposer,marked,markDone, pda,idx,removeTask})=>{
     return(
         <div className='w-full flex flex-col bg-white py-4 px-2 items-start space-y-4 rounded-md'>
-            <p className='font-semibold text-xs text-slate-400'>
+            <p className='font-semibold text-xs text-slate-400 flex items-center w-full justify-between'>
+
               {text}
+
+             {marked&&<input type="checkbox" onChange={()=>markDone(pda,idx)}/>} 
             </p>
             <div className='flex w-full justify-between'>
                 <main className='flex space-x-2'>
@@ -175,6 +183,11 @@ const TaskCard=({text,proposer})=>{
                         <span className='text-xs text-slate-300 '>{"0"}</span>
                         <RiAttachment2 className='text-xs text-slate-300 '/>
                    </h5>
+
+                   <RiDeleteBin5Line  
+                   className='text-sm text-rose-300 font-semibold'
+                    onClick={()=>removeTask(pda,idx)}
+                   />
                 </main>
 
             </div>
@@ -186,19 +199,28 @@ const TaskCard=({text,proposer})=>{
 
 
 
-const TaskSection=()=>{
+const TaskSection=({incompleteTasks,completedTasks,addTask,markDone,removeTask})=>{
     
+    const [taskDescription,setDescription]=useState("")
+
+
     return(
         <div className='w-full py-8'>
             <div className='flex w-full space-x-4'>
                 <main className='flex flex-col w-1/4 '>
-                    <TitleBar  name={"Open"}  borderColor={"border-red-700"} textColor={"text-red-700"} num={"3"}/>
+                    <TitleBar  name={"Open"}  borderColor={"border-red-700"} textColor={"text-red-700"} num={incompleteTasks?.length}/>
 
                     <div className='flex flex-col space-y-4 py-4'>
-                        {[1,2,3].map(()=>{
+                        { incompleteTasks?.map((task)=>{
 
                             return(
-                              <TaskCard text={"Lorem ipsum dolor si."} proposer={staff1} />
+                              <TaskCard 
+                              text={task?.account?.description} 
+                              proposer={staff1} marked={true} 
+                              markDone={markDone} 
+                              pda={task?.publicKey} 
+                              idx={task?.account?.idx} 
+                              removeTask={removeTask}/>
                             )
                         })
 
@@ -206,9 +228,12 @@ const TaskSection=()=>{
 
                     </div>
 
-                    <h5 className='flex items-center space-x-1'>
-                        <MdAdd className='text-slate-400'/>
-                        <span className='text-slate-400 text-xs'>Add new task</span>
+                    <h5 className='flex w-full items-center space-x-1'>
+                        <MdAdd className='text-slate-400' onClick={()=>addTask(taskDescription)}/>
+                        {/* <span className='text-slate-400 text-xs'>Add new task</span> */}
+                        <input placeholder="Add new task" className='w-11/12 text-xs py-0.5 px-1 text-slate-400 rounded-md bg-slate-200'
+                           onChange={(e)=>setDescription(e.target.value)}
+                        />
 
                     </h5>
                 </main>
@@ -219,7 +244,10 @@ const TaskSection=()=>{
                         {[1,2].map(()=>{
 
                             return(
-                              <TaskCard text={"Lorem ipsum dolor si."} proposer={staff1} />
+                              <TaskCard
+                               text={"Lorem ipsum dolor si."} 
+                               proposer={staff1}  
+                               marked={false}/>
                             )
                         })
 
@@ -229,18 +257,28 @@ const TaskSection=()=>{
 
                     <h5 className='flex items-center space-x-1'>
                         <MdAdd className='text-slate-400'/>
-                        <span className='text-slate-400 text-xs'>Add new task</span>
+                        <input placeholder="Add new task" className='w-11/12 text-xs py-0.5 px-1 text-slate-400 rounded-md bg-slate-200'/>
+
 
                     </h5>
                 </main>
                 <main className='flex flex-col w-1/4'>
-                   <TitleBar  name={"Done"}  borderColor={"border-green-700"} textColor={"text-green-700"} num={"5"}/>
+                   <TitleBar  name={"Done"}  borderColor={"border-green-700"} textColor={"text-green-700"} num={completedTasks?.length}/>
 
                    <div className='flex flex-col space-y-4 py-4'>
-                        {[1,2].map(()=>{
+                        {completedTasks?.map((task)=>{
 
                             return(
-                              <TaskCard text={"Lorem ipsum dolor si."} proposer={staff1} />
+                              <TaskCard 
+                                text={task?.account?.description} 
+                                proposer={staff1} 
+                                marked={false}
+                                markDone={markDone} 
+                                pda={task?.publicKey} 
+                                idx={task?.account?.idx} 
+                                removeTask={removeTask}
+                              />
+                              
                             )
                         })
 
@@ -249,19 +287,22 @@ const TaskSection=()=>{
                     </div>
 
                     <h5 className='flex items-center space-x-1'>
-                        <MdAdd className='text-slate-400'/>
-                        <span className='text-slate-400 text-xs'>Add new task</span>
+                        {/* <MdAdd className='text-slate-400'/> */}
+                        {/* <input placeholder="Add new task" className='w-11/12 text-xs py-0.5 px-1 rounded-md bg-slate-200'/> */}
+
 
                     </h5>
                 </main>
                 <main className='flex flex-col w-1/4'>
-                  <TitleBar  name={"Ideals"}  borderColor={"border-slate-500"} textColor={"text-slate-500"} num={"4"}/>
+                  <TitleBar  name={"Ideals"}  borderColor={"border-slate-500"} textColor={"text-slate-500"} num={"4"} marked={false}/>
 
                   <div className='flex flex-col space-y-4 py-4'>
                         {[1,2,4,5].map(()=>{
 
                             return(
-                              <TaskCard text={"Lorem ipsum dolor si."} proposer={staff1} />
+                              <TaskCard
+                               text={"Lorem ipsum dolor si."} 
+                               proposer={staff1} />
                             )
                         })
 
@@ -271,7 +312,8 @@ const TaskSection=()=>{
 
                     <h5 className='flex items-center space-x-1'>
                         <MdAdd className='text-slate-400'/>
-                        <span className='text-slate-400 text-xs'>Add new task</span>
+                        <input placeholder="Add new ideals" className='w-11/12 text-xs py-0.5 px-1 text-slate-400 rounded-md bg-slate-200'/>
+
 
                     </h5>
                 </main>
@@ -315,10 +357,23 @@ const Event=({evt})=>{
     )
 }
 export default function Boards() {
-    const {initializeUser } = useActions()
+    const {initializeUser ,getAllTask,addTask,markDone,removeTask} = useActions()
+    const tasks =useRecoilValue(TasksState)
 
+
+    useEffect(()=>{
+        getAllTask()
+    },[])
+
+    const incompleteTasks = useMemo(() => tasks?.filter((task) => !task?.account?.done), [tasks])
+    const completedTasks = useMemo(() => tasks?.filter((task) => task?.account?.done), [tasks])
     
+    const [startDate, setStartDate] = useState(new Date());
 
+    console.log( incompleteTasks,"incomplete")
+    console.log(completedTasks,"complete")
+    
+    console.log(tasks,"tasks,board")
   return (
     <div className='px-2 '>
        <TopBar />
@@ -326,11 +381,19 @@ export default function Boards() {
        <div className='flex py-20 space-x-5'>
          <div className='w-3/4'>
               <NavTop />
-              <TaskSection />
+              <TaskSection incompleteTasks={incompleteTasks} completedTasks={completedTasks} addTask={addTask} markDone={markDone} removeTask={removeTask}/>
          </div>
 
             <div className='flex flex-col text-black w-4/12 px-4 '>
+                <div className='flex w-full py-8 justify-start'>
+                <DatePicker 
+                selected={startDate} 
+                onChange={(date) => setStartDate(date)} 
+                 style={{width:"100%"}}
+                />
+                </div>
                 <div className='w-full bg-white rounded-md px-4 py-4 space-y-4 w-full flex flex-col items-start '>
+
                     <h5 className='text-lg font-semibold'>Today's Event</h5>
 
                     <main className='flex flex-col space-y-4 w-full'>
