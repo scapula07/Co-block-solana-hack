@@ -3,6 +3,11 @@ import MeCam from './videoMe'
 import {MdZoomOutMap,MdOutlineMic,MdVideocam,MdCall,MdSettings,MdAdd} from "react-icons/md"
 import solanaImg from "../../assets/solanaImg.png"
 import raydiumImg from "../../assets/raydiumImg.png"
+import {HuddleClientProvider,getHuddleClient} from "@huddle01/huddle01-client";
+import { useHuddleStore } from "@huddle01/huddle01-client/store";
+import { huddleClient } from '../../huddleutil'
+import PeerAudioVideo from './videopeer'
+
 
 const Reminder=({img,text})=>{
 
@@ -16,6 +21,28 @@ const Reminder=({img,text})=>{
 }
 
 export default function VideoCall() {
+
+
+    const huddleClient = getHuddleClient("YOUR_API_KEY");
+    const peersKeys = useHuddleStore((state) => Object.keys(state.peers));
+    const lobbyPeers = useHuddleStore((state) => state.lobbyPeers);
+    const roomState = useHuddleStore((state) => state.roomState);
+    const recordingState = useHuddleStore((state) => state.recordingState);
+    const recordings = useHuddleStore((state) => state.recordings);
+
+    const handleJoin = async () => {
+        try {
+          await huddleClient.join("dev", {
+            address: "",
+            wallet: "",
+            ens: "",
+          });
+    
+          console.log("joined");
+        } catch (error) {
+          console.log({ error });
+        }
+      };
      const [reminders,setReminders] =useState([
                 {
                     img:solanaImg,
@@ -35,7 +62,19 @@ export default function VideoCall() {
                  <div className='w-full h-full flex flex-col'>
                       <main className='h-3/5 px-4'>
                         <div className='bg-black w-full rounded-xl'>
+                        {peersKeys.length==0?
                            < MeCam />
+                           :
+
+                           <main className='bg-purple-900 h-4/5 grid grid-flow-row sm:grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-6 pt-8 w-full'>
+                           <MeCam />
+                                {peersKeys.map((key) => (
+                             < PeerAudioVideo key={`peerId-${key}`} peerIdAtIndex={key} />
+                             ))}
+                         
+                        </main>
+
+                        }
 
                           <main className='flex justify-center items-center w-full space-x-4 py-8'>
                              <h5 className='bg-white p-2 rounded-xl '>
@@ -44,10 +83,14 @@ export default function VideoCall() {
                              <h5 className='bg-white p-2 rounded-xl '>
                                  <MdOutlineMic  className='text-slate-700 text-lg' />
                                  </h5> 
-                             <h5 className='bg-red-700 p-2 rounded-xl '> 
+                             <h5 className='bg-red-700 p-2 rounded-xl '
+                                 onClick={() =>huddleClient.disableWebcam()}
+                             > 
                               <MdCall  className='text-white text-2xl'/>
                              </h5>  
-                             <h5 className='bg-white p-2 rounded-xl '>
+                             <h5 className='bg-white p-2 rounded-xl '
+                               onClick={() => huddleClient.enableWebcam()}
+                             >
                                 <MdVideocam  className='text-slate-700 text-lg' />
                                 </h5>  
                              <h5 className='bg-white p-2 rounded-xl '>
@@ -69,7 +112,14 @@ export default function VideoCall() {
                         </div>
 
                         <div className='flex items-center'>
+                            {[1,2].map(()=>{
 
+                                return(
+                                    <div>
+                                        
+                                    </div>
+                                )
+                            })}
                         </div>
                           
                      </main>

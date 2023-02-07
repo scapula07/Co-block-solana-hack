@@ -1,6 +1,7 @@
 import React from 'react'
 import {MdNotifications} from "react-icons/md"
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import { Link } from 'react-router-dom'
 
 export default function Header() {
   return (
@@ -13,9 +14,10 @@ export default function Header() {
          </main>
          <main className='w-4/5 flex  items-center justify-between'>
               <div className='flex space-x-10 w-3/5'>
-                  <h5>Dashboard</h5>
-                  <h5>Documents</h5>
-                  <h5>Teams</h5>
+                <Link to="/dashboard"> <h5>Dashboard</h5></Link> 
+                 <Link to="/documents"> <h5>Documents</h5></Link> 
+                 <Link to="/teams"><h5>Teams</h5></Link> 
+                 <Link to="/boards"><h5>Task board</h5></Link> 
               </div>
             <div className='flex items-center w-2/5 px-4 space-x-20'>
                 <MdNotifications />

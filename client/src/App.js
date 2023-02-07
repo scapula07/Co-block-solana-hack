@@ -17,28 +17,30 @@ import VideoCall from './pages/VideoConferencing';
 
 function App() {
   return (
+    <WalletConnectProvider>
     <div className="App">
-      <WalletConnectProvider>
-      <Layout>
+    
+    
      
       <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/company" element={<Staff />}  />
-          <Route exact path="/documents" element={<Documents />}  />
-          <Route exact path="/boards" element={<Boards />}  />
-          <Route exact path="/dashboards" element={<Dashboard />}  >
+          <Route exact path="/company" element={ <Layout><Staff /></Layout>}  />
+          <Route exact path="/documents" element={<Layout><Documents /></Layout>}  />
+          <Route exact path="/boards" element={<Layout><Boards /></Layout>}  />
+          <Route exact path="/dashboard" element={<Layout><Dashboard /></Layout>}  >
               <Route exact path="" element={<Tasks/>}  />
               <Route exact path="teams" element={<Myteams/>}  />
           </Route>
-          <Route exact path="/teams" element={<Teams  />}  />
-          <Route exact path="/devs" element={<DevPage />}  />
-          <Route exact path="/videocall" element={<VideoCall />}  />
+          <Route exact path="/teams" element={<Layout><Teams  /></Layout>}  />
+          <Route exact path="/devs" element={<Layout><DevPage /></Layout>}  />
+          <Route exact path="/videocall" element={<Layout><VideoCall /></Layout>}  />
         </Routes>
       
-      </Layout>
-      </WalletConnectProvider>
+      
+     
      
     </div>
+    </WalletConnectProvider>
   );
 }
 
