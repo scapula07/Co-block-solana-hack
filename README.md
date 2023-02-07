@@ -21,3 +21,23 @@ CO-BLOCK was built with the sole intention of been the one ecosystem to encourag
 The platform incentivise developers based on the number of tasks they have completed on teams they joined.
 
 Co-block has most features built in it to support team colloraboration and better communication experience e.g task board,video conferencing ,event planner,reminders,payroll manager etc.
+
+
+
+###  Technologies 
+
+1. Reactjs 
+1. Rusts and Anchor program
+1. Solana web3 js
+1. Firebase
+
+
+
+###  Dapp Architecture 
+
+
+Co-block has the following:
+
+- Backend -nodejs script
+- Client - reactjs
+- Smart contract - Rust and Anchor
