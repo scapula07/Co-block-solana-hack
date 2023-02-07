@@ -25,8 +25,8 @@ export const WalletConnectProvider = ({ children }) => {
     const wallets = useMemo(() => [new PhantomWalletAdapter(), new GlowWalletAdapter(), new SlopeWalletAdapter(), new SolflareWalletAdapter({ network }), new TorusWalletAdapter()], [network])
 
     return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} autoConnect>
+        <ConnectionProvider endpoint={endpoint} autoConnect>
+            <WalletProvider wallets={wallets} >
                 <WalletModalProvider>{children}</WalletModalProvider>
             </WalletProvider>
         </ConnectionProvider>

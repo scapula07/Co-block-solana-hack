@@ -49,7 +49,7 @@ export function useActions() {
                     setInitialized(true)
                        
 
-                    const taskAccounts = await program?.account?.taskAccount?.all([devFilter(publicKey.toString())])
+                    const taskAccounts = await program?.account?.taskAccount?.all([devFilter(publicKey?.toString())])
                     setMyTask(taskAccounts)
                     console.log(taskAccounts,"taskAccounts")
                 }else{
@@ -67,12 +67,13 @@ export function useActions() {
 
    
      const getAllTask=async()=>{
-        const taskAccounts = await program?.account?.taskAccount.all()
+        const taskAccounts = await program?.account?.taskAccount?.all()
         console.log(taskAccounts)
         setTasks(taskAccounts)
      }
 
     const initializeUser = async () => {
+        console.log("inoit")
         
         try{
             const [devPda, devBump] = findProgramAddressSync([utf8?.encode('STAFF_STATE'), publicKey?.toBuffer()], program?.programId)

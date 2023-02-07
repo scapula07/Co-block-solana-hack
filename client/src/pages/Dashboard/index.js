@@ -104,14 +104,14 @@ export default function Dashboard() {
                 </main>
                 
                 <main className=' flex items-center  w-1/4'>
-                {initialized&&
+                
                      <button className='bg-blue-400 rounded-md py-1 px-4 text-white'
-                       onClick={()=>initializeUser}
+                       onClick={initializeUser}
                      >Initialize profile</button>
-                }
-                 {!initialized&&
+                
+                
                      <span className='text-sm font-semibold'></span>
-                }
+                
                 </main>
 
             </div>
